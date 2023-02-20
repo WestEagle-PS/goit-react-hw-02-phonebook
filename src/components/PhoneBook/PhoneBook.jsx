@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import PhoneBlock from './PhoneBlock/PhoneBlock';
 import ContactList from './ContactList/ContactList';
 import ContactForm from './ContactForm/ContactForm';
@@ -53,20 +54,22 @@ class PhoneBook extends Component {
   getFilteredNumbers() {
     const { filter, contacts } = this.state;
 
-    if (!filter) {
-      return contacts;
-    }
+    // if (filter.length < 1) {
+    //   return contacts;
+    // }
 
     const normalizedFilter = filter.toLowerCase();
-    const result = contacts.filter(({ name, number }) => {
-      return (
-        name.toLowerCase().includes(normalizedFilter) ||
-        number.includes(normalizedFilter)
-      );
+    const result = contacts.filter(({ name }) => {
+      return name.toLowerCase().includes(normalizedFilter);
     });
 
     return result;
   }
+
+  handleFilterChange = e => {
+    const { value } = e.target;
+    this.setState({ filter: value });
+  };
 
   render() {
     const { onAddContacts, onDeleteNumber } = this;
@@ -81,10 +84,10 @@ class PhoneBook extends Component {
         <PhoneBlock title="Contacts">
           <label className={css.label}>Find contacts by name:</label>
           <input
-            onChange={this.handleChange}
+            onChange={this.handleFilterChange}
             className={css.textField}
-            type="text"
             name="filter"
+            value={this.state.filter}
           />
           <ContactList contacts={contacts} onDeleteNumber={onDeleteNumber} />
         </PhoneBlock>
@@ -94,3 +97,13 @@ class PhoneBook extends Component {
 }
 
 export default PhoneBook;
+
+PhoneBook.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      number: PropTypes.number.isRequired,
+    })
+  ),
+  filter: PropTypes.string,
+};

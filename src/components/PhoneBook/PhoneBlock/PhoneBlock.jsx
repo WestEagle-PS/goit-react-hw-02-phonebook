@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import css from './phone-block.module.scss';
 
 const PhoneBlock = ({ title, children }) => {
@@ -10,3 +11,7 @@ const PhoneBlock = ({ title, children }) => {
 };
 
 export default PhoneBlock;
+
+PhoneBlock.propTypes = {
+  title: PropTypes.string.isRequired,
+};
